@@ -1,6 +1,12 @@
 Resources
 =========
 
-A concept module for powering RESTful APIs.
+A concept Python module for powering RESTful APIs.
 
 But not via HTTP.
+
+
+License
+-------
+
+ISC.
