@@ -8,6 +8,8 @@ This omdule provides the core resources system.
 
 """
 
+from uuid import uuid4
+
 
 class Resource(object):
     """docstring for Resource"""
@@ -15,6 +17,7 @@ class Resource(object):
 
         self.name = name
         self.interface = interface
+        self.uuid = uuid4().hex
 
         super(Resource, self).__init__()
 
@@ -30,6 +33,9 @@ class Interface(object):
 
     def __init__(self):
         self.resources = dict()
+
+    def __repr__(self):
+        return '<interface [{0}]>'.format(', '.join(self.resources.keys()))
 
     def __getattribute__(self, key):
         if key not in ['resources']:
