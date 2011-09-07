@@ -12,7 +12,8 @@ from uuid import uuid4
 
 
 class Resource(object):
-    """docstring for Resource"""
+    """A RESTful Resource."""
+
     def __init__(self, name=None, interface=None):
 
         self.name = name
@@ -27,12 +28,13 @@ class Resource(object):
 
 
 class Interface(object):
-    """docstring for API"""
+    """The RESTful API Interface."""
 
     resource = Resource()
 
     def __init__(self):
         self.resources = dict()
+        self.uuid = uuid4().hex
 
     def __repr__(self):
         return '<interface [{0}]>'.format(', '.join(self.resources.keys()))
@@ -50,9 +52,21 @@ class Interface(object):
         return object.__getattribute__(self, key)
 
 
-    def map(self, resource, key):
+    def map(self, key, resource):
         self.resources[key] = resource(interface=self, name=key)
 
+
+
+class Element(object):
+    """A RESTful Element."""
+
+    def __init__(self):
+
+        self.uuid = uuid4().hex
+        self.id = None
+
+
+        super(Element, self).__init__()
 
 
 
