@@ -11,6 +11,8 @@ This omdule provides the core resources system.
 from uuid import uuid4
 
 
+__all__ = ('Resource', 'Interface', 'Element')
+
 class Resource(object):
     """A RESTful Resource."""
 
@@ -52,8 +54,24 @@ class Interface(object):
         return object.__getattribute__(self, key)
 
 
-    def map(self, key, resource):
-        self.resources[key] = resource(interface=self, name=key)
+    def map(self, key, resource=None):
+        """Map
+
+        If map is None (not provided), returns decorator.
+        """
+
+        if resource:
+            self.resources[key] = resource(interface=self, name=key)
+        else:
+            # Assume decorator usage.
+
+            def decorator(f):
+                self.map(key, f)
+                return f
+
+            return decorator
+
+
 
 
 
