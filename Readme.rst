@@ -1,9 +1,9 @@
-Resources
-=========
-
-**Work in progress.**
+Resources for Python
+====================
 
 *RESTful != HTTP.*
+
+**Work in progress.**
 
 This is a framework for bringing RESTful Resources to your Python applications. It can be used in a few ways:
 
@@ -15,8 +15,8 @@ Features
 --------
 
 - Simple API — makes no assumptions
-- 'hyperlink' support (Resource references)
 - Event/Signaling System
+- 'hyperlink' support (Resource references)
 - Custom Verb Support (HTTP verbs out of the box)
 - Content Negotiation
 
