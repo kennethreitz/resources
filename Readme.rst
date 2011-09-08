@@ -3,7 +3,7 @@ Resources
 
 **Work in progress.**
 
-A concept Python module for powering RESTful APIs. But not via HTTP.
+*RESTful != HTTP.*
 
 This is a framework for bringing RESTful Resources to your Python applications.
 It can be used in a few different .
