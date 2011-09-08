@@ -13,6 +13,19 @@ from uuid import uuid4
 
 __all__ = ('Resource', 'Interface', 'Element')
 
+
+def method_not_allowed(f):
+    def decorator(*args, **kwargs):
+        try:
+            return f(*args, **kwargs)
+        except Exception:
+            # print why
+            return None
+
+    return decorator
+
+
+
 class Resource(object):
     """A RESTful Resource."""
 
@@ -24,8 +37,24 @@ class Resource(object):
 
         super(Resource, self).__init__()
 
+    @method_not_allowed
+    def get(self, **options):
+
+
+        r = self.collection_get()
+
+        return r
+        # try:
+        #     self.get = self.element_get
+
+        # except AttributeError:
+            # pass
+
+
     def __repr__(self):
         return '<resource \'{0}\'>'.format(self.name)
+
+
 
 
 
@@ -78,11 +107,11 @@ class Interface(object):
 class Element(object):
     """A RESTful Element."""
 
-    def __init__(self):
+    def __init__(self, resource=None):
 
+        self.resource = resource
         self.uuid = uuid4().hex
         self.id = None
-
 
         super(Element, self).__init__()
 
