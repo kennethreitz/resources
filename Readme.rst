@@ -5,17 +5,16 @@ Resources
 
 *RESTful != HTTP.*
 
-This is a framework for bringing RESTful Resources to your Python applications.
-It can be used in a few different .
+This is a framework for bringing RESTful Resources to your Python applications. It can be used in a few ways:
 
-- Add a RESTful interface to your existing codebase.
-- Power the backbone of your entire application.
+- To add a RESTful interface to your existing codebase.
+- To power the backbone of your entire application.
 
 
 Features
 --------
 
-- Simple — makes no assumptions
+- Simple API — makes no assumptions
 - 'hyperlink' support (Resource references)
 - Event/Signaling System
 - Custom Verb Support (HTTP verbs out of the box)
@@ -40,7 +39,7 @@ Potentially::
         def element_get(self, ri):
             return self.__bookmarks.get(ri)
 
-        ...
+        ... # json content, element/collection put, &c
 
 Now we have an API w/ a single resource: ``bookmarks``. We can access it
 like so::
