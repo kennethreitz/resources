@@ -31,7 +31,7 @@ Potentially::
     api = Interface()
 
     @api.collection('bookmarks')
-    class Bookmarks(Resource):
+    class Bookmarks(object):
         """Haystack's Bookmarks Resource."""
 
         __bookmarks = {}

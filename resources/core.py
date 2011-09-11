@@ -12,7 +12,7 @@ import warnings
 from uuid import uuid4
 
 
-__all__ = ('Resource', 'Interface', 'Element')
+__all__ = ['Interface']
 
 
 def method_not_allowed(f):
@@ -27,36 +27,32 @@ def method_not_allowed(f):
 
 
 
-class Resource(object):
-    """A RESTful Resource."""
-
-    def __init__(self, name=None, interface=None):
-        self.name = name
-        self.interface = interface
-        self.ri = uuid4().hex
-        self.contains = None
-
-        super(Resource, self).__init__()
-
-    def __repr__(self):
-        return '<resource \'{0}\'>'.format(self.name)
-
 
 
 class Collection(object):
     """A RESTful Collection."""
 
-    def __init__(self, resource=None):
+    def __init__(self, interface=None, resource=None):
+        self.interface = interface
         self.resource = resource
         self.ri = uuid4().hex
 
         super(Collection, self).__init__()
 
+    @property
+    def name(self):
+        return self.interface.name_for(self)
+
     def __repr__(self):
-        return '<collection \'{0}:{1}\'>'.format(self.resource.name, self.ri)
+        return '<collection \'{0}:{1}\'>'.format(self.name, self.ri)
 
     def __getitem__(self, key):
-        element_exists = self.resource.element_head(key)
+        try:
+            element_exists = self.resource.element_head(key)
+        # Assume element exist if head isn't provided.
+        except AttributeError:
+            element_exists = True
+
 
         if element_exists:
             element = Element(resource=self.resource, collection=self)
@@ -64,8 +60,6 @@ class Collection(object):
 
             return element
 
-        else:
-            raise IndexError
 
     def content(content_type):
         pass
@@ -75,7 +69,7 @@ class Collection(object):
     def get(self, **options):
 
         # fire pre get element get hook
-        r = self.resource.collection_get(self.ri, **options)
+        r = self.resource.collection_get(**options)
         # fire post get element get hook
 
         return r
@@ -84,7 +78,7 @@ class Collection(object):
     @method_not_allowed
     def put(self, data, **options):
 
-        r = self.resource.collection_put(self.ri, data, **options)
+        r = self.resource.collection_put(self.resource, data, **options)
 
         return r
 
@@ -117,15 +111,16 @@ class Collection(object):
 class Element(object):
     """A RESTful Element."""
 
-    def __init__(self, resource=None, collection=None):
-        self.resource = resource
+    def __init__(self, interface=None, collection=None):
+        self.interface = interface
         self.collection = collection
+        self.resource = None
         self.ri = uuid4().hex
 
         super(Element, self).__init__()
 
     def __repr__(self):
-        return '<element \'{0}:{1}\'>'.format(self.resource.name, self.ri)
+        return '<element \'{0}:{1}\'>'.format(self.name, self.ri)
 
 
     def content(content_type):
@@ -193,21 +188,25 @@ class Interface(object):
                 pass
 
             if key in self.resources:
-                return self.resources.get(key).contains
+                return self.resources.get(key)
 
         return object.__getattribute__(self, key)
+
+    def name_for(self, instance):
+        """Returns the resource name for the given element/collection."""
+
+        for name, resource in self.resources.items():
+            if resource == instance:
+                return name
 
 
     def map(self, key, resource=None, is_collection=True):
         """Maps a given resource to the given namespace."""
 
-        new_resource = resource(interface=self, name=key)
-        self.resources[key] = new_resource
-
         if is_collection:
-            self.resources[key].contains = Collection(resource=new_resource)
+            self.resources[key] = Collection(interface=self, resource=resource())
         else:
-            self.resources[key].contains = Element(resource=new_resource)
+            self.resources[key] = Element(interface=self, resource=resource())
 
 
     def element(self, key):

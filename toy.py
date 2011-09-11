@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import resources
-from resources import Interface, Resource
+from resources import Interface
 
 
 # built in verbs
@@ -10,13 +10,18 @@ from resources import Interface, Resource
 api = Interface()
 
 
-@api.map('bookmarks')
-class Bookmarks(Resource):
+@api.collection('bookmarks')
+class Bookmarks(object):
     """Haystack's Bookmarks Resource."""
 
+    # __bookmarks = {'test': 'hi'}
     __bookmarks = {}
 
     # get(*args, **kwargs) <-- automatic
+    # ri = resource identifier
+
+    def element_head(self, ri):
+        return ri in self.__bookmarks
 
     def element_get(self, ri):
         return self.__bookmarks.get(ri)
@@ -76,10 +81,15 @@ def test(x):
 
 
 # print api
-print api.bookmarks.uuid
+print api.bookmarks
+# print api.resources
 print api.bookmarks.get()
 
 # print api.bookmarks.get(id='0')
+
+# api.bookmarks.get()
+# print api.bookmarks['test2']
+
 
 # >>> print api.bookmarks[00001]
 # <element <bookmarks:00001>
