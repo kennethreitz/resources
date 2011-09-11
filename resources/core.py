@@ -190,8 +190,8 @@ class Interface(object):
         else:
             # Assume decorator usage.
 
-            def decorator(f):
-                self.map(key, f)
+            def decorator(r):
+                self.map(key, resource=r, collection=collection)
                 return f
 
             return decorator
