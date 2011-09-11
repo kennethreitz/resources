@@ -34,6 +34,7 @@ class Resource(object):
         self.name = name
         self.interface = interface
         self.uuid = uuid4().hex
+        self.contains = None
 
         super(Resource, self).__init__()
 
@@ -102,15 +103,18 @@ class Collection(object):
 class Element(object):
     """A RESTful Element."""
 
-    def __init__(self, collection=None):
+    def __init__(self, resource=None, collection=None):
+        self.resource = resource
         self.collection = collection
         self.uuid = uuid4().hex
         self.ri = None
 
         super(Element, self).__init__()
 
+
     def content(content_type):
         pass
+
 
     @method_not_allowed
     def get(self, **options):
@@ -179,7 +183,7 @@ class Interface(object):
 
         return object.__getattribute__(self, key)
 
-    def map(self, key, resource=None, collection=True):
+    def map(self, key, resource=None, is_collection=True):
         """Maps a given resource to the given namespace.
 
         If map is None (not provided), returns decorator.
@@ -187,12 +191,18 @@ class Interface(object):
 
         if resource:
             self.resources[key] = resource(interface=self, name=key)
+
+            if is_collection:
+                self.resources[key].contains = Collection(resource=self)
+            else:
+                self.resources[key].contains = Element(resource=self)
+
         else:
             # Assume decorator usage.
 
             def decorator(r):
-                self.map(key, resource=r, collection=collection)
-                return f
+                self.map(key, resource=r, collection=is_collection)
+                return r
 
             return decorator
 
