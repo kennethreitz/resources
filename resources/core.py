@@ -168,7 +168,7 @@ class Interface(object):
 
     def __init__(self):
         self.resources = dict()
-        self.uuid = uuid4().hex
+        self.ri = uuid4().hex
 
     def __repr__(self):
         return '<interface [{0}]>'.format(', '.join(self.resources.keys()))
