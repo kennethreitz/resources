@@ -192,23 +192,29 @@ class Interface(object):
         If map is None (not provided), returns decorator.
         """
 
-        if resource:
-            new_resource = resource(interface=self, name=key)
-            self.resources[key] = new_resource
+        new_resource = resource(interface=self, name=key)
+        self.resources[key] = new_resource
 
-            if is_collection:
-                self.resources[key].contains = Collection(resource=new_resource)
-            else:
-                self.resources[key].contains = Element(resource=new_resource)
-
+        if is_collection:
+            self.resources[key].contains = Collection(resource=new_resource)
         else:
-            # Assume decorator usage.
+            self.resources[key].contains = Element(resource=new_resource)
 
-            def decorator(r):
-                self.map(key, resource=r, is_collection=is_collection)
-                return r
 
-            return decorator
+    def element(self, key):
+        def decorator(r):
+            self.map(key, resource=r, is_collection=False)
+            return r
+
+        return decorator
+
+
+    def collection(self, key):
+        def decorator(r):
+            self.map(key, resource=r, is_collection=True)
+            return r
+
+        return decorator
 
 
 

@@ -30,7 +30,7 @@ Potentially::
 
     api = Interface()
 
-    @api.map('bookmarks')
+    @api.collection('bookmarks')
     class Bookmarks(Resource):
         """Haystack's Bookmarks Resource."""
 
