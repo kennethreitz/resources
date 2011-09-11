@@ -53,6 +53,12 @@ class Collection(object):
 
         super(Collection, self).__init__()
 
+    def __repr__(self):
+        return '<collection \'{0}:{1}\'>'.format(
+            self.resource.name,
+            self.ri or self.uuid
+        )
+
     def content(content_type):
         pass
 
@@ -111,6 +117,11 @@ class Element(object):
 
         super(Element, self).__init__()
 
+    def __repr__(self):
+        return '<element \'{0}:{1}\'>'.format(
+            self.resource.name,
+            self.ri or self.uuid
+        )
 
     def content(content_type):
         pass
@@ -162,8 +173,6 @@ class Element(object):
 class Interface(object):
     """The RESTful API Interface."""
 
-    resource = Resource()
-
     def __init__(self):
         self.resources = dict()
         self.uuid = uuid4().hex
@@ -179,9 +188,10 @@ class Interface(object):
                 pass
 
             if key in self.resources:
-                return self.resources.get(key)
+                return self.resources.get(key).contains
 
         return object.__getattribute__(self, key)
+
 
     def map(self, key, resource=None, is_collection=True):
         """Maps a given resource to the given namespace.
@@ -190,12 +200,13 @@ class Interface(object):
         """
 
         if resource:
-            self.resources[key] = resource(interface=self, name=key)
+            new_resource = resource(interface=self, name=key)
+            self.resources[key] = new_resource
 
             if is_collection:
-                self.resources[key].contains = Collection(resource=self)
+                self.resources[key].contains = Collection(resource=new_resource)
             else:
-                self.resources[key].contains = Element(resource=self)
+                self.resources[key].contains = Element(resource=new_resource)
 
         else:
             # Assume decorator usage.
