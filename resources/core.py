@@ -187,10 +187,7 @@ class Interface(object):
 
 
     def map(self, key, resource=None, is_collection=True):
-        """Maps a given resource to the given namespace.
-
-        If map is None (not provided), returns decorator.
-        """
+        """Maps a given resource to the given namespace."""
 
         new_resource = resource(interface=self, name=key)
         self.resources[key] = new_resource
@@ -202,6 +199,8 @@ class Interface(object):
 
 
     def element(self, key):
+        """API element route decorator."""
+
         def decorator(r):
             self.map(key, resource=r, is_collection=False)
             return r
@@ -210,6 +209,8 @@ class Interface(object):
 
 
     def collection(self, key):
+        """API collection route decorator."""
+
         def decorator(r):
             self.map(key, resource=r, is_collection=True)
             return r
