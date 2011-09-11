@@ -26,7 +26,7 @@ Usage
 
 Potentially::
 
-    from resources import Interface, Resource
+    from resources import Interface
 
     api = Interface()
 
