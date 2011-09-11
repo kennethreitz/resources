@@ -55,6 +55,18 @@ class Collection(object):
     def __repr__(self):
         return '<collection \'{0}:{1}\'>'.format(self.resource.name, self.ri)
 
+    def __getitem__(self, key):
+        element_exists = self.resource.element_head(key)
+
+        if element_exists:
+            element = Element(resource=self.resource, collection=self)
+            element.ri = key
+
+            return element
+
+        else:
+            raise IndexError
+
     def content(content_type):
         pass
 
@@ -63,7 +75,7 @@ class Collection(object):
     def get(self, **options):
 
         # fire pre get element get hook
-        r = self.collection_get(self.ri, **options)
+        r = self.resource.collection_get(self.ri, **options)
         # fire post get element get hook
 
         return r
@@ -72,7 +84,7 @@ class Collection(object):
     @method_not_allowed
     def put(self, data, **options):
 
-        r = self.collection_put(self.ri, data, **options)
+        r = self.resource.collection_put(self.ri, data, **options)
 
         return r
 
@@ -80,7 +92,7 @@ class Collection(object):
     @method_not_allowed
     def patch(self, data, **options):
 
-        r = self.collection_patch(self.ri, data, **options)
+        r = self.resource.collection_patch(self.ri, data, **options)
 
         return r
 
@@ -88,7 +100,7 @@ class Collection(object):
     @method_not_allowed
     def post(self, data, **options):
 
-        r = self.element_post(self.ri, data, **options)
+        r = self.resource.element_post(self.ri, data, **options)
 
         return r
 
@@ -96,7 +108,7 @@ class Collection(object):
     @method_not_allowed
     def delete(self, **options):
 
-        r = self.element_delete(self.ri, **options)
+        r = self.resource.element_delete(self.ri, **options)
 
         return r
 
@@ -124,7 +136,7 @@ class Element(object):
     def get(self, **options):
 
         # fire pre get element get hook
-        r = self.element_get(self.ri, **options)
+        r = self.resource.element_get(self.ri, **options)
         # fire post get element get hook
 
         return r
@@ -133,7 +145,7 @@ class Element(object):
     @method_not_allowed
     def put(self, data, **options):
 
-        r = self.element_put(self.ri, data, **options)
+        r = self.resource.element_put(self.ri, data, **options)
 
         return r
 
@@ -141,7 +153,7 @@ class Element(object):
     @method_not_allowed
     def patch(self, data, **options):
 
-        r = self.element_patch(self.ri, data, **options)
+        r = self.resource.element_patch(self.ri, data, **options)
 
         return r
 
@@ -149,7 +161,7 @@ class Element(object):
     @method_not_allowed
     def post(self, data, **options):
 
-        r = self.element_post(self.ri, data, **options)
+        r = self.resource.element_post(self.ri, data, **options)
 
         return r
 
@@ -157,7 +169,7 @@ class Element(object):
     @method_not_allowed
     def delete(self, **options):
 
-        r = self.element_delete(self.ri, **options)
+        r = self.resource.element_delete(self.ri, **options)
 
         return r
 
