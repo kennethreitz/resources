@@ -45,7 +45,7 @@ Now we have an API w/ a single resource: ``bookmarks``. We can access it
 like so::
 
     >>> api.bookmarks
-    <resource 'bookmarks'>
+    <collection 'bookmarks'>
 
     >>> api.bookmarks['00001']
     <element <bookmarks:00001>
