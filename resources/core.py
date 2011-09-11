@@ -8,6 +8,7 @@ This omdule provides the core resources system.
 
 """
 
+import warnings
 from uuid import uuid4
 
 
@@ -18,8 +19,8 @@ def method_not_allowed(f):
     def decorator(*args, **kwargs):
         try:
             return f(*args, **kwargs)
-        except Exception:
-            # print why
+        except Exception, why:
+            warnings.warn(str(why))
             return None
 
     return decorator
@@ -30,31 +31,38 @@ class Resource(object):
     """A RESTful Resource."""
 
     def __init__(self, name=None, interface=None):
-
         self.name = name
         self.interface = interface
         self.uuid = uuid4().hex
 
         super(Resource, self).__init__()
 
-    @method_not_allowed
-    def get(self, **options):
-
-
-        r = self.collection_get()
-
-        return r
-        # try:
-        #     self.get = self.element_get
-
-        # except AttributeError:
-            # pass
-
+    def content(content_type):
+        pass
 
     def __repr__(self):
         return '<resource \'{0}\'>'.format(self.name)
 
 
+
+class Element(object):
+    """A RESTful Element."""
+
+    def __init__(self, collection=None):
+        self.resource = collection
+        self.uuid = uuid4().hex
+        self.id = None
+
+        super(Element, self).__init__()
+
+
+
+class Collection(object):
+    """A RESTful Collection."""
+
+    def __init__(self, resource=None):
+        self.resource = resource
+        super(Collection, self).__init__()
 
 
 
@@ -82,9 +90,8 @@ class Interface(object):
 
         return object.__getattribute__(self, key)
 
-
     def map(self, key, resource=None):
-        """Map
+        """Maps a given resource to the given namespace.
 
         If map is None (not provided), returns decorator.
         """
@@ -102,18 +109,6 @@ class Interface(object):
 
 
 
-
-
-class Element(object):
-    """A RESTful Element."""
-
-    def __init__(self, resource=None):
-
-        self.resource = resource
-        self.uuid = uuid4().hex
-        self.id = None
-
-        super(Element, self).__init__()
 
 
 
