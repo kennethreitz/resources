@@ -37,23 +37,8 @@ class Resource(object):
 
         super(Resource, self).__init__()
 
-    def content(content_type):
-        pass
-
     def __repr__(self):
         return '<resource \'{0}\'>'.format(self.name)
-
-
-
-class Element(object):
-    """A RESTful Element."""
-
-    def __init__(self, collection=None):
-        self.resource = collection
-        self.uuid = uuid4().hex
-        self.id = None
-
-        super(Element, self).__init__()
 
 
 
@@ -62,7 +47,111 @@ class Collection(object):
 
     def __init__(self, resource=None):
         self.resource = resource
+        self.uuid = uuid4().hex
+        self.ri = None
+
         super(Collection, self).__init__()
+
+    def content(content_type):
+        pass
+
+
+    @method_not_allowed
+    def get(self, **options):
+
+        # fire pre get element get hook
+        r = self.collection_get(self.ri, **options)
+        # fire post get element get hook
+
+        return r
+
+
+    @method_not_allowed
+    def put(self, data, **options):
+
+        r = self.collection_put(self.ri, data, **options)
+
+        return r
+
+
+    @method_not_allowed
+    def patch(self, data, **options):
+
+        r = self.collection_patch(self.ri, data, **options)
+
+        return r
+
+
+    @method_not_allowed
+    def post(self, data, **options):
+
+        r = self.element_post(self.ri, data, **options)
+
+        return r
+
+
+    @method_not_allowed
+    def delete(self, **options):
+
+        r = self.element_delete(self.ri, **options)
+
+        return r
+
+
+
+class Element(object):
+    """A RESTful Element."""
+
+    def __init__(self, collection=None):
+        self.collection = collection
+        self.uuid = uuid4().hex
+        self.ri = None
+
+        super(Element, self).__init__()
+
+    def content(content_type):
+        pass
+
+    @method_not_allowed
+    def get(self, **options):
+
+        # fire pre get element get hook
+        r = self.element_get(self.ri, **options)
+        # fire post get element get hook
+
+        return r
+
+
+    @method_not_allowed
+    def put(self, data, **options):
+
+        r = self.element_put(self.ri, data, **options)
+
+        return r
+
+
+    @method_not_allowed
+    def patch(self, data, **options):
+
+        r = self.element_patch(self.ri, data, **options)
+
+        return r
+
+
+    @method_not_allowed
+    def post(self, data, **options):
+
+        r = self.element_post(self.ri, data, **options)
+
+        return r
+
+
+    @method_not_allowed
+    def delete(self, **options):
+
+        r = self.element_delete(self.ri, **options)
+
+        return r
 
 
 
@@ -90,7 +179,7 @@ class Interface(object):
 
         return object.__getattribute__(self, key)
 
-    def map(self, key, resource=None):
+    def map(self, key, resource=None, collection=True):
         """Maps a given resource to the given namespace.
 
         If map is None (not provided), returns decorator.
