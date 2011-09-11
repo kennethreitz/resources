@@ -201,7 +201,7 @@ class Interface(object):
             # Assume decorator usage.
 
             def decorator(r):
-                self.map(key, resource=r, collection=is_collection)
+                self.map(key, resource=r, is_collection=is_collection)
                 return r
 
             return decorator
