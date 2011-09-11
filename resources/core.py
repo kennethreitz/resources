@@ -33,7 +33,7 @@ class Resource(object):
     def __init__(self, name=None, interface=None):
         self.name = name
         self.interface = interface
-        self.uuid = uuid4().hex
+        self.ri = uuid4().hex
         self.contains = None
 
         super(Resource, self).__init__()
@@ -48,16 +48,12 @@ class Collection(object):
 
     def __init__(self, resource=None):
         self.resource = resource
-        self.uuid = uuid4().hex
-        self.ri = None
+        self.ri = uuid4().hex
 
         super(Collection, self).__init__()
 
     def __repr__(self):
-        return '<collection \'{0}:{1}\'>'.format(
-            self.resource.name,
-            self.ri or self.uuid
-        )
+        return '<collection \'{0}:{1}\'>'.format(self.resource.name, self.ri)
 
     def content(content_type):
         pass
@@ -112,16 +108,13 @@ class Element(object):
     def __init__(self, resource=None, collection=None):
         self.resource = resource
         self.collection = collection
-        self.uuid = uuid4().hex
-        self.ri = None
+        self.ri = uuid4().hex
 
         super(Element, self).__init__()
 
     def __repr__(self):
-        return '<element \'{0}:{1}\'>'.format(
-            self.resource.name,
-            self.ri or self.uuid
-        )
+        return '<element \'{0}:{1}\'>'.format(self.resource.name, self.ri)
+
 
     def content(content_type):
         pass
